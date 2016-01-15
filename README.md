@@ -1,4 +1,4 @@
-frontend-nanodegree-arcade-game
+P3 - Frogger
 ===============================
 
 ### Installation
