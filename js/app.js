@@ -1,57 +1,77 @@
-// Enemies our player must avoid
-var Enemy = function(x, y, s) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+/**
+ * Super class that contains shared properties and methods for objects in the game
+ * @constructor
+ */
+var Char = function() { };
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+/**
+ * Draws the image on the canvas
+ */
+Char.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+/**
+ * Enemies our player must avoid
+ * @param x {int} - x coordinate position
+ * @param y {int) - y coordinate position
+ * @param s {int} - speed
+ * @constructor
+ */
+var Enemy = function(x, y, s) {
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
     this.speed = s;
 };
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+// Inherit methods off Char class
+Enemy.prototype = Object.create(Char.prototype);
+
+/**
+ * Updates the location of the enemy based on speed
+ * @param dt {double} - a time delta between ticks
+ */
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
     this.x += (this.speed * dt);
     if (this.x > 500)
         this.x = -100;
 };
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+/**
+ * Player object which defaults player to start at 200,400.
+ * @constructor
+ */
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
 };
 
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+// Inherit methods off Char class
+Player.prototype = Object.create(Char.prototype);
 
+/**
+ * Checks if the player has reached the water is colliding with the enemy
+ */
 Player.prototype.update = function() {
     var player = this;
-    var messagesDiv = document.getElementById('message');
+    var messagesDiv = document.getElementById('message'); // div for displaying message
+
+    // Loop thru all enemies to check if player is colliding
+    // Uses hit box 80x70
     allEnemies.forEach(function(enemy) {
         if (enemy.y + 70 > player.y && enemy.y - 70 < player.y)
             if (enemy.x + 80 > player.x && enemy.x - 80 < player.x){
+                // If colliding, display lose message in red, then reset game
                 messagesDiv.innerHTML = 'you lost!';
                 messagesDiv.style.color = 'red';
                 resetSprites();
             }
     });
 
+    // If player has reached the top (water), then display win message in green
+    // and reset game
     if (player.y <= 0) {
         document.getElementById('message').innerHTML = 'you win!';
         messagesDiv.style.color = 'green';
@@ -59,6 +79,10 @@ Player.prototype.update = function() {
     }
 };
 
+/**
+ * Move player based on key input
+ * @param key {string} - the keyboard input
+ */
 Player.prototype.handleInput = function(key) {
     if (!key) return;
     switch (key) {
@@ -85,14 +109,13 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// Instantiate variables to store enemies and the player
+// Call reset game to create the characters
 var allEnemies, player;
 resetSprites();
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Player.handleInput() method.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -104,6 +127,9 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+/**
+ * Create all enemies and the player
+ */
 function resetSprites() {
     allEnemies = [new Enemy(100, 145, 20), new Enemy(0, 60, 25), new Enemy(200, 230, 30), new Enemy(50, 60, 35)];
     player = new Player();
