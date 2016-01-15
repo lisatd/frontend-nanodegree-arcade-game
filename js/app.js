@@ -131,6 +131,18 @@ document.addEventListener('keyup', function(e) {
  * Create all enemies and the player
  */
 function resetSprites() {
-    allEnemies = [new Enemy(100, 145, 20), new Enemy(0, 60, 25), new Enemy(200, 230, 30), new Enemy(50, 60, 35)];
+    allEnemies = [
+        new Enemy(100, 145, 20),
+        new Enemy(0, 60, 25),
+        new Enemy(200, 230, 30),
+        new Enemy(50, 230, 65),
+        new Enemy(50, 60, 35),
+        new Enemy(200, 145, 50)];
+
+    // Create a new enemy after 4 seconds
+    setTimeout(function() {
+        allEnemies.push(new Enemy(-100, 60, 70));
+    }, 4000);
+
     player = new Player();
 }
