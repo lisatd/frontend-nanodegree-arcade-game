@@ -1,5 +1,5 @@
 /**
- * Super class that contains shared properties and methods for objects in the game
+ * Super class that contains shared methods for objects in the game
  * @constructor
  */
 var Char = function() { };
