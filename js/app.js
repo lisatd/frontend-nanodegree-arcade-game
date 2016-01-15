@@ -42,14 +42,21 @@ Player.prototype.render = function() {
 
 Player.prototype.update = function() {
     var player = this;
+    var messagesDiv = document.getElementById('message');
     allEnemies.forEach(function(enemy) {
         if (enemy.y + 70 > player.y && enemy.y - 70 < player.y)
-            if (enemy.x + 80 > player.x && enemy.x - 80 < player.x)
+            if (enemy.x + 80 > player.x && enemy.x - 80 < player.x){
+                messagesDiv.innerHTML = 'you lost!';
+                messagesDiv.style.color = 'red';
                 resetSprites();
+            }
     });
 
-    if (player.y <= 0)
+    if (player.y <= 0) {
         document.getElementById('message').innerHTML = 'you win!';
+        messagesDiv.style.color = 'green';
+        resetSprites();
+    }
 };
 
 Player.prototype.handleInput = function(key) {
